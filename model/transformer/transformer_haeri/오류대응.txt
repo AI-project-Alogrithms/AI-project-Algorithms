@@ -1,4 +1,5 @@
-pip install torchtext==0.12.0
+torch.legacy 안될때: python 3.7.12 버전에서 torchtext==0.10.0 설치
+pip install torchtext==0.10.0
 pip install spacy
 
 OSError: [E050] Can't find model 'de_core_news_sm'. It doesn't seem to be a Python package or a valid path to a data directory.
@@ -8,6 +9,7 @@ OSError: [E050] Can't find model 'de_core_news_sm'. It doesn't seem to be a Pyth
 train_data, valid_data, test_data = Multi30k.splits(exts=self.ext, fields=(self.source, self.target))
 => Exception has occurred: SSLError
 HTTPSConnectionPool(host='www.quest.dcs.shef.ac.uk', port=443): Max retries exceeded with url: /wmt16_files_mmt/training.tar.gz (Caused by SSLError(CertificateError("hostname 'www.quest.dcs.shef.ac.uk' doesn't match either of '*.dcs.shef.ac.uk', '*.dcs.sheffield.ac.uk'")))
+=> 다시 돌리니까 해결됨
 
 trg_mask = trg_pad_mask & trg_sub_mask
 
