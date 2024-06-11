@@ -9,7 +9,7 @@ from collections import Counter
 import numpy as np
 
 
-def bleu_stats(hypothesis, reference):
+def bleu_stats(hypothesis, reference):  # 가설 (hyphotesis)와 참조(reference)
     """Compute statistics for BLEU."""
     stats = []
     stats.append(len(hypothesis))
@@ -51,7 +51,7 @@ def idx_to_word(x, vocab): # 디코딩 (주어진 숫자 인덱스들을 단어�
     words = []
     for i in x:
         word = vocab.itos[i] # index to string
-        if '<' not in word: # "<"가 뭔데?
+        if '<' not in word: # "<unk>, <pad>, <sos>, <eos>와 같은 스페셜 토큰이 아닐 때
             words.append(word)
     words = " ".join(words)
     return words
