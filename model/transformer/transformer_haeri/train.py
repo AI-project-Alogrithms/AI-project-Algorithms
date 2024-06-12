@@ -19,7 +19,6 @@ from util.epoch_timer import epoch_time
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-
 def initialize_weights(m):
     if hasattr(m, 'weight') and m.weight.dim() > 1: # weight를 attribute로 가지고 있는 경우
         nn.init.kaiming_uniform(m.weight.data) # initialization 방법 - Kaiming He가 제안한 방식으로, 
@@ -57,27 +56,27 @@ criterion = nn.CrossEntropyLoss(ignore_index=src_pad_idx)
 
 def train(model, iterator, optimizer, criterion, clip):
     model.train()
-    return 0
+ #   return 0
 
-    # epoch_loss = 0
-    # for i, batch in enumerate(iterator):
-    #     src = batch.src # 128 * 26
-    #     trg = batch.trg # 128 * 25
+    epoch_loss = 0
+    for i, batch in enumerate(iterator):
+        src = batch.src # (배치 사이즈 * 소스 시퀀스 길이) = 128 * 26 (26은 배치에 있는 시퀀스에 따라 동적으로 변동)
+        trg = batch.trg # (배치 사이즈 * 타겟 시퀀스 길이) = 128 * 25 (25는 배치에 있는 시퀀스에 따라 동적으로 변동)
 
-    #     optimizer.zero_grad()
-    #     output = model(src, trg[:, :-1]) # 왜 :, :-1 이지? 소스값과 타겟값을 이용하는데 정답 바로 전 시점까지 인 듯.
-    #     output_reshape = output.contiguous().view(-1, output.shape[-1])
-    #     trg = trg[:, 1:].contiguous().view(-1) # 그래야 맞추려는 거의 정답을 정답으로 세웠을 때 비교하려는 듯.
+        optimizer.zero_grad()
+        output = model(src, trg[:, :-1]) # 왜 소스값과 타겟값 이용 시, 타겟 값 정답 바로 전 시점까지 이용
+        output_reshape = output.contiguous().view(-1, output.shape[-1])
+        trg = trg[:, 1:].contiguous().view(-1) # 그래야 맞추려는 거의 정답을 정답으로 세웠을 때 비교하려는 듯.
 
-    #     loss = criterion(output_reshape, trg)
-    #     loss.backward()
-    #     torch.nn.utils.clip_grad_norm_(model.parameters(), clip) # 뭐하는 코드임?
-    #     optimizer.step()
+        loss = criterion(output_reshape, trg)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), clip) # 모델의 그래디언트를 클리핑 (벡터의 노름이 clip 이상으로 안 커지도록) 해서 그래디언트의 노름을 제한해서, 그래디언트 폭주를 방지하여 학습을 안정화
+        optimizer.step()
 
-    #     epoch_loss += loss.item()
-    #     print('step :', round((i / len(iterator)) * 100, 2), '% , loss :', loss.item())
+        epoch_loss += loss.item()
+        print('step :', round((i / len(iterator)) * 100, 2), '% , loss :', loss.item())
 
-    # return epoch_loss / len(iterator) # len(iterator)의 의미?
+    return epoch_loss / len(iterator) # len(iterator)의 의미?
 
 
 def evaluate(model, iterator, criterion):
@@ -103,16 +102,16 @@ def evaluate(model, iterator, criterion):
                     trg_words = idx_to_word(batch.trg[j], loader.target.vocab) # 정답 문장
                     output_words = output[j].max(dim=1)[1] # output[j]는 10*7853 이라서, output[j].max(dim=1)은 확률값이 가장 높은 토큰을 선택하고, 그 중 값과 인덱스 중 인덱스를 선택하는 게 [1]
                     output_words = idx_to_word(output_words, loader.target.vocab)
-                    bleu = get_bleu(hypotheses=output_words.split(), reference=trg_words.split())
+                    bleu = get_bleu(hypotheses=output_words.split(), reference=trg_words.split()) # 단어를 스플릿해서 인풋으로 넣어
                     total_bleu.append(bleu)
                 except:
                     pass
 
-            total_bleu = sum(total_bleu) / len(total_bleu)
+            total_bleu = sum(total_bleu) / len(total_bleu) # 배치 별 total_blue의 평균
             batch_bleu.append(total_bleu)
 
     batch_bleu = sum(batch_bleu) / len(batch_bleu)
-    return epoch_loss / len(iterator), batch_bleu
+    return epoch_loss / len(iterator), batch_bleu # loss의 평균값, total_blue의 평균
 
 
 def run(total_epoch, best_loss):
@@ -130,7 +129,7 @@ def run(total_epoch, best_loss):
         train_losses.append(train_loss)
         test_losses.append(valid_loss)
         bleus.append(bleu)
-        epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+        epoch_mins, epoch_secs = epoch_time(start_time, end_time) # 걸린 분, 초 반환
 
         if valid_loss < best_loss:
             best_loss = valid_loss
@@ -149,7 +148,7 @@ def run(total_epoch, best_loss):
         f.close()
 
         print(f'Epoch: {step + 1} | Time: {epoch_mins}m {epoch_secs}s')
-        print(f'\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}')
+        print(f'\tTrain Loss: {train_loss:.3f} | Train PPL: {math.exp(train_loss):7.3f}') # loss에 exp을 취하면 PPL?
         print(f'\tVal Loss: {valid_loss:.3f} |  Val PPL: {math.exp(valid_loss):7.3f}')
         print(f'\tBLEU Score: {bleu:.3f}')
 

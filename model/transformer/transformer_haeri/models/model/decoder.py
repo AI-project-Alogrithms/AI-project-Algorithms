@@ -28,11 +28,11 @@ class Decoder(nn.Module):
         self.linear = nn.Linear(d_model, dec_voc_size) # 마지막 linear layer가 존재 (dec_voc_size로 확률을 뽑아줄 행렬)
 
     def forward(self, trg, enc_src, trg_mask, src_mask):
-        trg = self.emb(trg)
+        trg = self.emb(trg) # [batch_size, seq_len] -> [batch_size, seq_len, d_model]
 
         for layer in self.layers:
-            trg = layer(trg, enc_src, trg_mask, src_mask)
+            trg = layer(trg, enc_src, trg_mask, src_mask) # [batch_size, seq_len, d_model]
 
         # pass to LM head
-        output = self.linear(trg) # output은 아마 dec_voc_size 벡터일 것 같다.
+        output = self.linear(trg) # [batch_size, seq_len, d_model] -> [batch_size, seq_len, dec_vocab_size]
         return output

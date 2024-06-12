@@ -40,22 +40,20 @@ class Transformer(nn.Module):
                                device=device)
 
     def forward(self, src, trg):
-        src_mask = self.make_src_mask(src) # source에서 마스크 할 거 마스킹
-        trg_mask = self.make_trg_mask(trg) # target에서 마스킹할 거 마스킹
-        enc_src = self.encoder(src, src_mask) # 마스크된 거랑 src랑 다시 인코더?? 뭐하는거지?
-        output = self.decoder(trg, enc_src, trg_mask, src_mask) # 타겟이랑, 소스에서 나온 컨텍스트 벡터와, 타겟의 마스킹과, 소스의 마스킹?
+        src_mask = self.make_src_mask(src) # source sequence masking
+        trg_mask = self.make_trg_mask(trg) # target sequence masking
+        enc_src = self.encoder(src, src_mask) # enc_src: [batch_size, seq_len, d_model] = [128, 31, 512]
+        output = self.decoder(trg, enc_src, trg_mask, src_mask) # 타겟, 인코더에서 나온 컨텍스트 벡터, 타겟&소스 마스킹
         return output
 
-    def make_src_mask(self, src): # unsqueeze(1)과 unsqueeze(2)의 의미?
+    def make_src_mask(self, src): # pad_idx랑 인덱스가 "다르면" True / "같으면" False. 
+        # unsqueeze를 통해 새로운 차원을 생성해서 [batch_size, src_len] -> 최종 마스크 텐서의 shape이 [batch_size, 1, 1, src_len]이 되게끔
         src_mask = (src != self.src_pad_idx).unsqueeze(1).unsqueeze(2)
         return src_mask
 
     def make_trg_mask(self, trg): # torch.ByteTensor의 의미
-        trg_pad_mask = (trg != self.trg_pad_idx).unsqueeze(1).unsqueeze(3)
+        trg_pad_mask = (trg != self.trg_pad_idx).unsqueeze(1).unsqueeze(3) # 최종 마스크 텐서: [batch_size, 1, trg_len, 1]
         trg_len = trg.shape[1]
-        trg_sub_mask = torch.tril(torch.ones(trg_len, trg_len)).type(torch.bool).to(self.device) # torch.ByteTensor 에서 torch.bool로 수정
+        trg_sub_mask = torch.tril(torch.ones(trg_len, trg_len)).type(torch.bool).to(self.device) # [trg_len, trg_len] 의 하삼각행렬
         trg_mask = trg_pad_mask & trg_sub_mask
-        return trg_mask
-        # trg_pad_mask 인 동시에 trg_sub_mask이어야 한다.
-        # 1) 일단 패딩이 아니다 2) 그 와중에 submask가 아니다 약간 이런 식.
-        # 패딩을 일단 가려주고.
+        return trg_mask # [batch_size, 1, trg_len, trg_len] shape로 broadcasting

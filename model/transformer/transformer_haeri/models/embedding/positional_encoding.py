@@ -23,11 +23,11 @@ class PositionalEncoding(nn.Module):
         super(PositionalEncoding, self).__init__()
 
         # same size with input matrix (for adding with input matrix)
-        self.encoding = torch.zeros(max_len, d_model, device=device)
+        self.encoding = torch.zeros(max_len, d_model, device=device) # self.encoding:  256 * 512
         self.encoding.requires_grad = False  # we don't need to compute gradient -> 포지셔널 인코딩은 학습 대상이 아님.
 
-        pos = torch.arange(0, max_len, device=device)
-        pos = pos.float().unsqueeze(dim=1)
+        pos = torch.arange(0, max_len, device=device) # pos: [0,1,2,3,..,255]의 1차원 벡터
+        pos = pos.float().unsqueeze(dim=1) # pos: 256*1
         # 1D => 2D unsqueeze to represent word's position
 
         _2i = torch.arange(0, d_model, step=2, device=device).float()
