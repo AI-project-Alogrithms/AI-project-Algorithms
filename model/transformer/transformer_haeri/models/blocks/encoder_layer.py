@@ -33,7 +33,7 @@ class EncoderLayer(nn.Module): # 하나의 인코더 레이어는 멀티헤드�
         
         # 3. positionwise feed forward network
         _x = x
-        x = self.ffn(x)
+        x = self.ffn(x) # [batch_size, seq_len, d_model]
       
         # 4. add and norm
         x = self.dropout2(x)

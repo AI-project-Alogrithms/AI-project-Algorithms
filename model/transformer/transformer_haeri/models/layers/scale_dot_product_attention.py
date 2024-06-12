@@ -27,11 +27,11 @@ class ScaleDotProductAttention(nn.Module):
         batch_size, head, length, d_tensor = k.size()
 
         # 1. dot product Query with Key^T to compute similarity
-        k_t = k.transpose(2, 3)  # transpose => [batch_size, head, d_tensor, length]
-        score = (q @ k_t) / math.sqrt(d_tensor)  # scaled dot product # 4차원 텐서를 matmul한다는 것의 의미는? 아마 batch_size, head, 
+        k_t = k.transpose(2, 3)  #  [batch_size, head, length, d_tensor] => [batch_size, head, d_tensor, length]
+        score = (q @ k_t) / math.sqrt(d_tensor)  # scaled dot product, score: [batch_size, head, length, length]
 
-        # 2. apply masking (opt) -> mask가 None인 경우가 있나?
-        if mask is not None: # 마스킹이 필요한 곳에 마스킹 -> masked_fill의 의미가 어떻게 되는거지?
+        # 2. apply masking (opt) 
+        if mask is not None: # mask==0 (즉 False인 경우) 값을 -10000으로 바꿔서 
             score = score.masked_fill(mask == 0, -10000)
 
         # 3. pass them softmax to make [0, 1] range
