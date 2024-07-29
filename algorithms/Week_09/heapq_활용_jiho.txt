@@ -1,0 +1,34 @@
+import heapq as hq
+import heapq
+
+nums = [5, 6, 2, 1, 7, 4, 10, 15]
+heap = []
+
+for num in nums:
+    heapq.heappush(heap, (-num, num))  # (우선 순위, 값)
+
+print(heap)
+
+# 일반 리스트를 힙 구조로 변환
+hq.heapify(list)
+
+# 힙 구조를 유자하면서, item을 heap 안에 추가
+hq.heappush(heap, item)
+
+# 힙 구조를 유지하면서, 가장 작은 항목을 팝하고 반환
+hq.heappop(heap)
+
+# pop하지 않고 가장 작은 항목에 액세스
+heap[0]
+
+# 힙에 item을 푸시하고, 가장 작은 항목을 pop하고 반환, heappush + heappop, 별도 실행보다 효율적
+hq.heappushpop(heap, item)
+
+# 힙에서 가장 작은 항목을 pop하고 반환, item 푸시, heappop + heappush, 별도 실행보다 효율적
+hq.heapreplace(heap, item)
+
+# n개의 가장 큰 요소의 리스트 반환, key로 비교 키 함수 지정 가능(iterable이 힙인 것이 좋음)
+heapq.nlargest(n, iterable, key)
+
+# n개의 가장 작은 요소의 리스트 반환, key로 비교 키 함수 지정 가능(iterable이 힙인 것이 좋음)
+heapq.nsmallest(n, iterable, key)
