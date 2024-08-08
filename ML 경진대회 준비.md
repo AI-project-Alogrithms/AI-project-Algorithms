@@ -1,4 +1,4 @@
-- 데이터 전처리, 모델튜닝, 차원축소기법, 앙상블 기법 정리
+- 데이터 전처리, 모델튜닝, 차원축소기법, 앙상블 기법 정리  
 [1. 차원 축소 기법(PCA/LDA)](https://mud-tablecloth-00c.notion.site/PCA-LDA-c91a04b0af6347ce933f7a750d5c9caf?pvs=4)  
 [2. 교차검증](https://mud-tablecloth-00c.notion.site/6e67e913a2354a6eb1b7fec49755221d?pvs=4)  
 [3. 하이퍼파라미터 튜닝](https://mud-tablecloth-00c.notion.site/b0d4eb63aace4467b93efff99a4e5777?pvs=4)  
