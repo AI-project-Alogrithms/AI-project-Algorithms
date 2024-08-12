@@ -1,7 +1,7 @@
 # 로봇 청소기 => bfs + 순열
 # 비트 마스킹으로도 풀라는데 넘 어려움
 import sys
-# sys.stdin = open("C:/Users/linda/OneDrive/바탕 화면/2024/AI-project-Algorithms/algorithms/input.txt", "r")
+sys.stdin = open("C:/Users/linda/OneDrive/바탕 화면/2024/AI-project-Algorithms/algorithms/input.txt", "r")
 input = sys.stdin.readline
 from collections import deque
 from itertools import permutations # 순열
