@@ -11,12 +11,12 @@
 
 <table>
  <tr>
-    <td align="center"><a href="https://github.com/haerihaeri"><img src="https://avatars.githubusercontent.com/haerihaeri" width="130px;" alt=""></a></td>
     <td align="center"><a href="https://github.com/Jhheo123"><img src="https://avatars.githubusercontent.com/Jhheo123" width="130px;" alt=""></a></td>
+    <td align="center"><a href="https://github.com/haerihaeri"><img src="https://avatars.githubusercontent.com/haerihaeri" width="130px;" alt=""></a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/haerihaeri"><b>haeri</b></a></td>
     <td align="center"><a href="https://github.com/Jhheo123"><b>jiho</b></a></td>
+    <td align="center"><a href="https://github.com/haerihaeri"><b>haeri</b></a></td>
   </tr>
   <tr> 
     <td align="center"><img src="https://img.shields.io/badge/python-007396.svg?&style=for-the-badge&logo=Python&logoColor=white"></td>
